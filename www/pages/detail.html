@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Produk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/auth.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <style>
+      .detail-wrapper {
+        padding: 20px;
+        padding-bottom: 40px;
+        background: #fcfcfc;
+        min-height: 100vh;
+      }
+
+      .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: none;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a1a;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+
+      .detail-image-wrapper {
+        background: #f7f7f7;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        aspect-ratio: 1;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+
+      .detail-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .detail-brand {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #8c8c8c;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+      }
+
+      .detail-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.3;
+        margin-bottom: 8px;
+      }
+
+      .detail-price {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 10px;
+      }
+
+      .detail-stock {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .stock-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        color: #1a1a1a;
+        background: #f2f2f2;
+        border: 1px solid #e5e5e5;
+      }
+
+      .stock-badge.available {
+        background: #f2f2f2;
+        color: #1a1a1a;
+        border-color: #d9d9d9;
+      }
+
+      .stock-badge.low {
+        background: #fff8e6;
+        color: #c4820e;
+        border-color: #ffe58f;
+      }
+
+      .stock-badge.soldout {
+        background: #fff1f0;
+        color: #f5222d;
+        border-color: #ffa39e;
+      }
+
+      .detail-divider {
+        border: none;
+        border-top: 1px solid #f0f0f0;
+        margin: 20px 0;
+      }
+
+      .detail-section-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #8c8c8c;
+        margin-bottom: 12px;
+      }
+
+      .detail-description {
+        font-size: 14px;
+        color: #444;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+
+      .size-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 28px;
+      }
+
+      .size-btn {
+        background: #f7f7f7;
+        border: 1.5px solid #f0f0f0;
+        border-radius: 10px;
+        padding: 10px 4px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.15s ease;
+      }
+
+      .size-btn.selected {
+        background: #1a1a1a;
+        border-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .btn-add-cart {
+        width: 100%;
+        background: #1a1a1a;
+        color: #ffffff;
+        border: none;
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 0.3px;
+      }
+
+      .btn-add-cart:active {
+        transform: scale(0.98);
+        background: #333;
+      }
+
+      .btn-add-cart:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .detail-loading {
+        text-align: center;
+        padding: 80px 20px;
+        color: #8c8c8c;
+        font-size: 14px;
+      }
+
+      #toast-notif {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a1a;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 9999;
+        transition: transform 0.3s ease;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      #toast-notif.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="page-body">
+    <div class="detail-wrapper">
+      <button class="btn-back" onclick="kembaliKeHome()">← Kembali</button>
+      <div id="detail-content">
+        <div class="detail-loading">Memuat detail produk...</div>
+      </div>
+    </div>
+
+    <div id="toast-notif"></div>
+
+    <script src="../js/app-core.js"></script>
+    <script src="../js/detail-page.js"></script>
+  </body>
+</html>

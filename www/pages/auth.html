@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Autentikasi Sneakers Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/auth.css" />
+    <style>
+      #toast-auth {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 10000;
+        transition: transform 0.35s cubic-bezier(0.1, 0.8, 0.3, 1);
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      #toast-auth.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="auth-body">
+    <div class="auth-container">
+      <div id="box-login">
+        <div class="auth-header">
+          <h2 class="auth-title">Selamat Datang</h2>
+          <p class="auth-subtitle">
+            Silakan masuk ke akun sneakers
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="nama@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" />
+        </div>
+
+        <div class="auth-helper">
+          <span class="link-style" onclick="pindahForm('box-forgot')"
+            >Lupa Password?</span
+          >
+        </div>
+
+        <button class="btn-primary-auth" onclick="aksiLogin()">Masuk</button>
+
+        <p class="auth-footer">
+          Belum punya akun?
+          <span class="link-bold" onclick="pindahForm('box-register')"
+            >Daftar Sekarang</span
+          >
+        </p>
+      </div>
+
+      <div id="box-register" style="display: none">
+        <div class="auth-header">
+          <h2 class="auth-title">Buat Akun</h2>
+          <p class="auth-subtitle">
+            Daftar untuk mulai mengoleksi sneakers terbaik
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <input
+            type="text"
+            id="reg-nama"
+            placeholder="Masukkan nama lengkap"
+          />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="nama@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            id="reg-password"
+            placeholder="Min. 8 karakter (Huruf besar, kecil, & angka)"
+          />
+          <div
+            id="error-password-msg"
+            style="
+              color: #ff3838;
+              font-size: 13px;
+              margin-top: 6px;
+              font-weight: 500;
+              display: none;
+            "
+          ></div>
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Password</label>
+          <input
+            type="password"
+            id="reg-password-confirm"
+            placeholder="Ulangi password Anda"
+          />
+        </div>
+
+        <button class="btn-primary-auth" onclick="aksiRegister()">
+          Daftar
+        </button>
+
+        <p class="auth-footer">
+          Sudah punya akun?
+          <span class="link-bold" onclick="pindahForm('box-login')">Masuk</span>
+        </p>
+      </div>
+
+      <div id="box-forgot" style="display: none">
+        <div class="auth-header">
+          <h2 class="auth-title">Reset Sandi</h2>
+          <p class="auth-subtitle">
+            Kami akan mengirimkan tautan pemulihan ke email Anda
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Email Terdaftar</label>
+          <input type="email" id="forgot-email" placeholder="nama@email.com" />
+        </div>
+
+        <button class="btn-primary-auth" onclick="aksiForgotPassword()">
+          Kirim Tautan Reset
+        </button>
+
+        <p class="auth-footer">
+          <span class="link-bold" onclick="pindahForm('box-login')"
+            >Kembali ke Login</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- Elemen Toast Floating UI Custom -->
+    <div id="toast-auth"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <script src="../js/app-core.js"></script>
+    <script>
+      window.SneakersApp.initFirebase(window);
+    </script>
+
+    <script src="../js/auth.js"></script>
+
+    <script>
+      // Logika Perpindahan Form Lokal
+      function pindahForm(formId) {
+        document.getElementById("box-login").style.display = "none";
+        document.getElementById("box-register").style.display = "none";
+        document.getElementById("box-forgot").style.display = "none";
+        document.getElementById(formId).style.display = "block";
+      }
+
+      // Controler Notifikasi Toast Melayang
+      var _toastTimer = null;
+      window.tampilkanToastAuth = function (pesan) {
+        var toast = document.getElementById("toast-auth");
+        if (!toast) return;
+        
+        toast.innerText = pesan;
+        toast.classList.add("show");
+
+        clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function () {
+          toast.classList.remove("show");
+        }, 3000);
+      };
+
+      function aksiLogin() {
+        if (typeof authLogin === "function") {
+          authLogin(
+            document.getElementById("login-email").value,
+            document.getElementById("login-password").value,
+          );
+        }
+      }
+
+      function aksiRegister() {
+        if (typeof authRegister === "function") {
+          authRegister(
+            document.getElementById("reg-nama").value,
+            document.getElementById("reg-email").value,
+            document.getElementById("reg-password").value,
+            document.getElementById("reg-password-confirm").value,
+          );
+        }
+      }
+
+      function aksiForgotPassword() {
+        if (typeof authForgotPassword === "function") {
+          authForgotPassword(document.getElementById("forgot-email").value);
+        }
+      }
+    </script>
+  </body>
+</html>

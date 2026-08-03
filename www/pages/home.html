@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      body {
+        background: #f8f8f8;
+        color: #1a1a1a;
+      }
+
+      .search-wrapper {
+        padding: 16px 20px 12px;
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .search-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f4f4f6;
+        border-radius: 14px;
+        padding: 13px 16px;
+        cursor: pointer;
+        border: 1.5px solid #f0f0f0;
+        transition: border-color 0.2s;
+        user-select: none;
+      }
+      .search-box:active {
+        background: #efefef;
+      }
+      .search-box svg {
+        flex-shrink: 0;
+        color: #aaa;
+      }
+      .search-box-placeholder {
+        font-size: 14px;
+        color: #aaa;
+        font-weight: 400;
+      }
+
+      .hero-swiper {
+        margin: 16px 20px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        height: 160px;
+        background: #eaeaea;
+        position: relative;
+      }
+
+      .premium-image-slide {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: default; 
+        overflow: hidden;
+      }
+
+      .premium-image-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      }
+
+      .banner-glass-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(26, 26, 26, 0.65);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        z-index: 10;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .premium-pagination.swiper-pagination-bullets {
+        bottom: 10px !important;
+      }
+      .premium-pagination .swiper-pagination-bullet {
+        background: #ffffff !important;
+        opacity: 0.4;
+        width: 6px;
+        height: 6px;
+        transition: all 0.3s ease;
+      }
+      .premium-pagination .swiper-pagination-bullet-active {
+        opacity: 1 !important;
+        width: 18px;
+        border-radius: 4px;
+        background: #ffffff !important;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 20px 12px;
+      }
+      .section-label {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+      .section-see-all {
+        font-size: 12px;
+        font-weight: 600;
+        color: #888;
+        cursor: pointer;
+      }
+
+      .brand-scroll {
+        display: flex;
+        gap: 10px;
+        padding: 4px 20px 8px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .brand-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .brand-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+      .brand-logo-wrap {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid #ececec;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        transition: 0.25s;
+      }
+      .brand-logo-wrap img {
+        width: 60%;
+        height: 60%;
+        object-fit: contain;
+        transition: 0.25s ease;
+      }
+      .brand-chip-name {
+        margin-top: 2px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #777;
+        white-space: nowrap;
+        text-transform: capitalize;
+        transition: 0.25s;
+      }
+      .brand-chip.active .brand-logo-wrap {
+        background: #fff;
+        border: 1.5px solid #ff3838;
+        box-shadow: 0 4px 12px rgba(255, 56, 56, 0.15);
+        transform: translateY(-2px);
+      }
+      .brand-chip:hover .brand-logo-wrap {
+        border-color: #ff3838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 56, 56, 0.1);
+      }
+      .brand-chip.active .brand-logo-wrap img {
+        filter: none;
+        transform: scale(1.05);
+      }
+      .brand-chip.active .brand-chip-name {
+        color: #ff3838;
+      }
+      .brand-chip:active .brand-logo-wrap {
+        transform: scale(0.96);
+      }
+      .brand-all-text {
+        font-size: 11px;
+        font-weight: 800;
+        color: #1a1a1a;
+        letter-spacing: 0.5px;
+        text-transform: capitalize;
+        transition: 0.25s;
+      }
+      .brand-chip.active .brand-all-text {
+        color: #ff3838;
+      }
+
+      .product-section {
+        padding: 0 20px 20px;
+      }
+      .product-grid-home {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .product-card-home {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .product-card-home:active {
+        transform: scale(0.97);
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      }
+      .product-card-img {
+        background: #f4f4f6;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        overflow: hidden;
+      }
+      .product-card-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .product-card-body {
+        padding: 12px;
+      }
+      .product-card-brand {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #aaa;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .product-card-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 4px 0 6px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 34px;
+        line-height: 1.3;
+      }
+      .product-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .product-card-price {
+        font-size: 13px;
+        font-weight: 800;
+        color: #1a1a1a;
+      }
+      .btn-buy {
+        background: #1a1a1a;
+        color: #fff;
+        border: none;
+        padding: 7px 12px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+      }
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e8e8e8 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 12px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skeleton-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+      }
+      .skeleton-img {
+        aspect-ratio: 1;
+      }
+      .skeleton-line {
+        height: 10px;
+        margin: 12px 12px 6px;
+        border-radius: 6px;
+      }
+      .skeleton-line.short {
+        width: 50%;
+        margin: 6px 12px 12px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="search-wrapper">
+      <div class="search-box" onclick="window.parent.bukaSearchOverlay()">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="search-box-placeholder"
+          >Cari sneakers, brand, model...</span
+        >
+      </div>
+    </div>
+
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://www.newbalance.co.id/media/weltpixel/owlcarouselslider/images/m/a/main_banner_2400x1000_px_copy-20260709-043042_1.jpg"
+            alt="New Balance Banner"
+          />
+          <div class="banner-glass-badge">New Balance</div>
+        </div>
+
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://i.pinimg.com/736x/22/d6/c0/22d6c07035debaa8bc64c22abde81119.jpg"
+            alt="Adidas Banner"
+          />
+          <div class="banner-glass-badge">Adidas</div>
+        </div>
+
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://images.puma.com/image/upload/q_auto,f_auto,w_1440/regional/%7Eregional%7EIDN%7Eothers%7EKOP%7EFull+Bleed+Hero%7E2026%7EAH26_H-STREET%7Eh+street+mesh+-+web+banner+_2000x486.jpg/fmt/png"
+            alt="Puma Banner"
+          />
+          <div class="banner-glass-badge">Puma</div>
+        </div>
+
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://i.pinimg.com/564x/7b/c9/5f/7bc95f8094338be40808d86277912f15.jpg"
+            alt="Vans Hype Banner"
+          />
+          <div class="banner-glass-badge">Asics</div>
+        </div>
+
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://i.pinimg.com/1200x/fb/48/87/fb4887b27ae456d6794d01b538f29e07.jpg"
+            alt="Nike Air"
+          />
+          <div class="banner-glass-badge">Nike Air</div>
+        </div>
+
+        <div class="swiper-slide premium-image-slide">
+          <img
+            src="https://i.pinimg.com/1200x/03/25/bf/0325bf501eb396375b35b3cafbfd1c90.jpg"
+            alt="Vans"
+          />
+          <div class="banner-glass-badge">Vans</div>
+        </div>
+      </div>
+
+      <div class="swiper-pagination premium-pagination"></div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-label">Brand</span>
+      <span class="section-see-all" onclick="resetBrand()">Semua</span>
+    </div>
+
+    <div class="brand-scroll" id="brand-scroll">
+      <div
+        class="brand-chip active"
+        id="chip-all"
+        onclick="filterBrand('all', this)"
+      >
+        <div class="brand-logo-wrap">
+          <span class="brand-all-text">All</span>
+        </div>
+        <span class="brand-chip-name">Semua</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Nike"
+        onclick="filterBrand('Nike', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_nike1.png" alt="Nike" />
+        </div>
+        <span class="brand-chip-name">Nike</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Adidas"
+        onclick="filterBrand('Adidas', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_adidas2.png" alt="Adidas" />
+        </div>
+        <span class="brand-chip-name">Adidas</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Puma"
+        onclick="filterBrand('Puma', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo-puma.png" alt="Puma" />
+        </div>
+        <span class="brand-chip-name">Puma</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Vans"
+        onclick="filterBrand('Vans', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_vans1.png" alt="Vans" />
+        </div>
+        <span class="brand-chip-name">Vans</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Saucony"
+        onclick="filterBrand('Saucony', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_saucony1.png" alt="Saucony" />
+        </div>
+        <span class="brand-chip-name">Saucony</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-Asics"
+        onclick="filterBrand('Asics', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_asics1.png" alt="Asics" />
+        </div>
+        <span class="brand-chip-name">Asics</span>
+      </div>
+
+      <div
+        class="brand-chip"
+        id="chip-NewBalance"
+        onclick="filterBrand('New Balance', this)"
+      >
+        <div class="brand-logo-wrap">
+          <img src="../assets/brands/logo_newbalance.png" alt="New Balance" />
+        </div>
+        <span class="brand-chip-name">New Balance</span>
+      </div>
+    </div>
+
+    <div class="section-header" style="padding-top: 24px">
+      <span class="section-label" id="section-label-text">Rekomendasi</span>
+      <span class="section-see-all" id="product-count-label"></span>
+    </div>
+    <div class="product-section">
+      <div id="product-grid-home" class="product-grid-home">
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-img"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line short"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-img"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line short"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="../js/app-core.js"></script>
+    <script src="../js/home-page.js"></script>
+  </body>
+</html>

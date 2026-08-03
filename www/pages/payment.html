@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metode Pembayaran</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/auth.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <style>
+      .payment-wrapper {
+        padding: 20px;
+        background: #fcfcfc;
+        min-height: 100vh;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      /* Navigation Header */
+      .nav-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .btn-back-premium {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .payment-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1a1a1a;
+        letter-spacing: -0.5px;
+        margin: 0;
+      }
+
+      /* Metode Pembayaran Group */
+      .method-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .method-card {
+        background: #ffffff;
+        border: 1.5px solid #f0f0f2;
+        border-radius: 16px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .method-card:active {
+        transform: scale(0.99);
+      }
+
+      .method-card input[type="radio"] {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .method-card input[type="radio"]::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #1a1a1a;
+        transform: scale(0);
+        transition: transform 0.2s ease;
+      }
+
+      .method-card input[type="radio"]:checked {
+        border-color: #1a1a1a;
+      }
+
+      .method-card input[type="radio"]:checked::before {
+        transform: scale(1);
+      }
+
+      .method-card.active-card {
+        border-color: #1a1a1a;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      }
+
+      .method-label-text {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      /* Kartu Ringkasan Mewah */
+      .luxury-summary-card {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+        border: 1px solid #f2f2f4;
+        margin: 24px 0 28px;
+      }
+
+      .luxury-summary-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #8c8c8c;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .luxury-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+        color: #666666;
+      }
+
+      .luxury-summary-row .label {
+        font-weight: 500;
+      }
+      .luxury-summary-row .value {
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .luxury-divider {
+        border: none;
+        border-top: 1px dashed #e4e4e8;
+        margin: 14px 0;
+      }
+      .luxury-summary-row.total-row {
+        margin-bottom: 0;
+        margin-top: 4px;
+      }
+      .luxury-summary-row.total-row .label {
+        font-weight: 800;
+        color: #1a1a1a;
+        font-size: 14px;
+      }
+      .luxury-summary-row.total-row .value {
+        font-size: 19px;
+        font-weight: 800;
+        color: #000000;
+        letter-spacing: -0.3px;
+      }
+
+      /* Button Action */
+      .btn-checkout-black {
+        width: 100%;
+        background: #1a1a1a;
+        color: #ffffff;
+        border: none;
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .btn-checkout-black:active {
+        transform: scale(0.98);
+        background: #333333;
+      }
+      .btn-checkout-black:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Tambahkan ini di dalam tag <style> pages/payment.html Anda */
+      #toast-notif {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 9999;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      #toast-notif.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="page-body">
+    <div class="payment-wrapper">
+      <div class="nav-header">
+        <button class="btn-back-premium" onclick="kembaliKeCheckout()">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <h2 class="payment-title">Metode Pembayaran</h2>
+      </div>
+
+      <div class="method-group">
+        <label
+          class="method-card active-card"
+          onclick="updateCardHighlight(this)"
+        >
+          <input type="radio" name="payment_method" value="COD" checked />
+          <span class="method-label-text">💵 &nbsp;COD (Bayar di Tempat)</span>
+        </label>
+
+        <label class="method-card" onclick="updateCardHighlight(this)">
+          <input type="radio" name="payment_method" value="Transfer Bank" />
+          <span class="method-label-text">🏛️ &nbsp;Transfer Bank</span>
+        </label>
+
+        <label class="method-card" onclick="updateCardHighlight(this)">
+          <input type="radio" name="payment_method" value="E-Wallet" />
+          <span class="method-label-text">📱 &nbsp;E-Wallet</span>
+        </label>
+      </div>
+
+      <div class="luxury-summary-card">
+        <div class="luxury-summary-title">Ringkasan Pembayaran</div>
+        <div class="luxury-summary-row">
+          <span class="label">Total Barang</span>
+          <span class="value" id="summary-qty-val">0 Pcs</span>
+        </div>
+        <div class="luxury-summary-row">
+          <span class="label">Subtotal Produk</span>
+          <span class="value" id="summary-subtotal-val">Rp 0</span>
+        </div>
+        <div class="luxury-summary-row">
+          <span class="label">Ongkos Kirim</span>
+          <span class="value">Rp 25.000</span>
+        </div>
+        <hr class="luxury-divider" />
+        <div class="luxury-summary-row total-row">
+          <span class="label">Total Pembayaran</span>
+          <span class="value" id="summary-total-val">Rp 0</span>
+        </div>
+      </div>
+
+      <button class="btn-checkout-black" onclick="prosesPembayaran()">
+        Bayar Sekarang
+      </button>
+    </div>
+
+    <div id="toast-notif"></div>
+
+    <script src="../js/app-core.js"></script>
+    <script src="../js/payment-page.js"></script>
+    <script>
+      function updateCardHighlight(element) {
+        document.querySelectorAll(".method-card").forEach(function (card) {
+          card.classList.remove("active-card");
+        });
+        element.classList.add("active-card");
+      }
+
+      function kembaliKeCheckout() {
+        window.location.href = "checkout.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var stored = localStorage.getItem("pending_checkout");
+        if (stored) {
+          var checkoutData = JSON.parse(stored);
+          var totalQty = 0;
+          var subtotal = checkoutData.items.reduce(function (sum, item) {
+            var qty = parseInt(item.qty || 1, 10);
+            totalQty += qty;
+            return sum + item.price * qty;
+          }, 0);
+
+          var formatRupiah = function (num) {
+            return new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+            }).format(num);
+          };
+
+          document.getElementById("summary-qty-val").innerText =
+            totalQty + " Pcs";
+          document.getElementById("summary-subtotal-val").innerText =
+            formatRupiah(subtotal);
+          document.getElementById("summary-total-val").innerText = formatRupiah(
+            subtotal + 25000,
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

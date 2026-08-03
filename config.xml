@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.tokosneakers.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Sneakers Shop</name>
+    <description>
+        Aplikasi E-Commerce sneakers premium berbasis Cordova dan Firebase.
+    </description>
+    <author email="dev@tokosneakers.com" href="https://tokosneakers.com">
+        Sneakers Shop Team
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="https://*.googleapis.com/*" />
+    <allow-navigation href="https://*.gstatic.com/*" />
+    <allow-navigation href="https://*.firebaseapp.com/*" />
+    <allow-navigation href="https://*.firebasestorage.app/*" />
+</widget>

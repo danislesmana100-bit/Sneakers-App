@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ringkasan Pesanan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/auth.css" />
+    <style>
+      .premium-wrapper {
+        padding: 20px;
+        background: #fcfcfc;
+        min-height: 100vh;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      /* Navigation Header */
+      .nav-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .btn-back-premium {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .page-premium-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1a1a1a;
+        letter-spacing: -0.5px;
+        margin: 0;
+      }
+
+      .premium-luxury-card {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+        border: 1px solid #f2f2f4;
+        margin-bottom: 16px;
+      }
+
+      .card-premium-title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .card-premium-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #8c8c8c;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .badge-premium-status {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-premium-empty {
+        background: #fff1f0;
+        color: #f5222d;
+      }
+      .badge-premium-active {
+        background: #f6ffed;
+        color: #52c41a;
+      }
+
+      .premium-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .premium-field-input,
+      .premium-field-textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid #f0f0f2;
+        border-radius: 14px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        color: #1a1a1a;
+        box-sizing: border-box;
+        background: #fafafa;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+      .premium-field-input:focus,
+      .premium-field-textarea:focus {
+        border-color: #1a1a1a;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      }
+      .premium-field-input::placeholder,
+      .premium-field-textarea::placeholder {
+        color: #b8b8b8;
+      }
+
+      .luxury-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+        color: #666666;
+      }
+      .luxury-summary-row .label {
+        font-weight: 500;
+      }
+      .luxury-summary-row .value {
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .luxury-divider {
+        border: none;
+        border-top: 1px dashed #e4e4e8;
+        margin: 14px 0;
+      }
+      .luxury-summary-row.total-row {
+        margin-bottom: 0;
+        margin-top: 4px;
+      }
+      .luxury-summary-row.total-row .label {
+        font-weight: 800;
+        color: #1a1a1a;
+        font-size: 14px;
+      }
+      .luxury-summary-row.total-row .value {
+        font-size: 19px;
+        font-weight: 800;
+        color: #000000;
+        letter-spacing: -0.3px;
+      }
+
+      .btn-checkout-black {
+        width: 100%;
+        background: #1a1a1a;
+        color: #ffffff;
+        border: none;
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 12px;
+      }
+      .btn-checkout-black:active {
+        transform: scale(0.98);
+        background: #333333;
+      }
+    </style>
+  </head>
+  <body class="page-body">
+    <div class="premium-wrapper">
+      <div class="nav-header">
+        <button class="btn-back-premium" onclick="kembaliKeKeranjang()">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <h2 class="page-premium-title">Ringkasan Pesanan</h2>
+      </div>
+
+      <div class="premium-luxury-card">
+        <div class="card-premium-title-wrapper">
+          <span class="card-premium-title">📍 Alamat Pengiriman</span>
+          <span
+            id="address-badge"
+            class="badge-status badge-premium-status badge-premium-empty"
+            >Belum Lengkap</span
+          >
+        </div>
+        <div class="premium-input-group">
+          <input
+            type="text"
+            id="input-nama"
+            class="premium-field-input"
+            placeholder="Nama Penerima"
+            oninput="validasiInputOtomatis()"
+          />
+          <input
+            type="text"
+            id="input-telepon"
+            class="premium-field-input"
+            placeholder="Nomor Telepon"
+            oninput="validasiInputOtomatis()"
+          />
+          <textarea
+            id="input-jalan"
+            class="premium-field-textarea"
+            rows="2"
+            placeholder="Alamat Lengkap (Nama Jalan, RT/RW, No. Rumah)"
+            oninput="validasiInputOtomatis()"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="premium-luxury-card">
+        <div class="card-premium-title" style="margin-bottom: 16px">
+          📦 Detail Produk
+        </div>
+        <div id="product-summary-list"></div>
+      </div>
+
+      <div class="premium-luxury-card">
+        <div class="card-premium-title" style="margin-bottom: 16px">
+          💰 Rincian Pembayaran
+        </div>
+        <div class="luxury-summary-row">
+          <span class="label">Subtotal Produk</span>
+          <span class="value" id="summary-subtotal">Rp 0</span>
+        </div>
+        <div class="luxury-summary-row">
+          <span class="label">Ongkos Kirim</span>
+          <span class="value">Rp 25.000</span>
+        </div>
+        <hr class="luxury-divider" />
+        <div class="luxury-summary-row total-row">
+          <span class="label">Total Pembayaran</span>
+          <span class="value" id="summary-total">Rp 0</span>
+        </div>
+      </div>
+
+      <button class="btn-checkout-black" onclick="validasiDanLanjut()">
+        Lanjut ke Pembayaran →
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var payload = JSON.parse(localStorage.getItem("pending_checkout"));
+        if (!payload || !payload.items) return;
+
+        var subtotal = 0;
+        var html = payload.items
+          .map(function (item) {
+            var qty = parseInt(item.qty || 1, 10);
+            subtotal += item.price * qty;
+            return `
+                    <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px; border-bottom: 1px solid #fafafa; padding-bottom: 12px;">
+                        <div style="width:60px; height:60px; background:#f8f8fa; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; border: 1px solid #f1f1f3;">
+                            <img src="${item.image}" style="width:85%; height:80%; object-fit:contain;">
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:14px; font-weight:700; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
+                            <div style="font-size:11px; color:#8c8c8c; margin-top:2px; font-weight:500;">Ukuran: ${item.size} &middot; ${qty} pcs</div>
+                            <div style="font-size:13px; font-weight:700; color:#1a1a1a; margin-top:2px;">Rp ${(item.price * qty).toLocaleString("id-ID")}</div>
+                        </div>
+                    </div>`;
+          })
+          .join("");
+
+        document.getElementById("product-summary-list").innerHTML = html;
+
+        var formatRupiah = function (num) {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(num);
+        };
+
+        document.getElementById("summary-subtotal").innerText =
+          formatRupiah(subtotal);
+        document.getElementById("summary-total").innerText = formatRupiah(
+          subtotal + 25000,
+        );
+
+        var counterCekAuth = 0;
+        var unsubscribeAlamat = null;
+
+        function ambilAlamatDinamis() {
+          var parentFb = window.parent && window.parent.firebase;
+          var parentAuth = parentFb ? parentFb.auth() : firebase.auth();
+
+          var currentUser = parentAuth.currentUser;
+
+          if (currentUser) {
+            console.log(
+              "[Checkout] Sukses Bypass UID User dari Parent:",
+              currentUser.uid,
+            );
+            var db =
+              (window.parent.SneakersApp &&
+                window.parent.SneakersApp.getDb(window.parent)) ||
+              (window.SneakersApp && window.SneakersApp.getDb(window)) ||
+              firebase.firestore();
+
+            db.collection("users")
+              .doc(currentUser.uid)
+              .get()
+              .then(function (doc) {
+                if (doc.exists && doc.data()) {
+                  var dataUser = doc.data();
+                  console.log(
+                    "[Checkout] Data Alamat Firestore Ditemukan:",
+                    dataUser,
+                  );
+
+                  // Deteksi variasi nama field database secara tangguh
+                  var namaFinal = dataUser.nama || dataUser.name || "";
+                  var telpFinal =
+                    dataUser.telepon || dataUser.telp || dataUser.phone || "";
+                  var jalanFinal = dataUser.alamat || dataUser.address || "";
+
+                  if (namaFinal)
+                    document.getElementById("input-nama").value = namaFinal;
+                  if (telpFinal)
+                    document.getElementById("input-telepon").value = telpFinal;
+                  if (jalanFinal)
+                    document.getElementById("input-jalan").value = jalanFinal;
+
+                  validasiInputOtomatis();
+                } else {
+                  console.log(
+                    "[Checkout] Dokumen di Firestore kosong, gunakan localStorage.",
+                  );
+                  isiDariLocalStorage(payload);
+                }
+              })
+              .catch(function (err) {
+                console.error(
+                  "[Checkout] Gagal fetch data dari Firestore:",
+                  err,
+                );
+                isiDariLocalStorage(payload);
+              });
+          } else if (counterCekAuth < 30) {
+            // 🔥 POLLING AGRESIF: Jika parent auth belum siap, kejar terus setiap 150ms (Maksimal 30 kali)
+            counterCekAuth++;
+            setTimeout(ambilAlamatDinamis, 150);
+          } else {
+            console.log(
+              "[Checkout] Gagal mendeteksi user aktif di parent window, fallback ke localStorage.",
+            );
+            isiDariLocalStorage(payload);
+          }
+        }
+
+        // Jalankan fungsi
+        ambilAlamatDinamis();
+      });
+
+      function isiDariLocalStorage(payload) {
+        if (payload && payload.alamat) {
+          document.getElementById("input-nama").value =
+            payload.alamat.nama || "";
+          document.getElementById("input-telepon").value =
+            payload.alamat.telepon || "";
+          document.getElementById("input-jalan").value =
+            payload.alamat.jalan || "";
+          validasiInputOtomatis();
+        }
+      }
+
+      function validasiInputOtomatis() {
+        var nama = document.getElementById("input-nama").value.trim();
+        var telp = document.getElementById("input-telepon").value.trim();
+        var jalan = document.getElementById("input-jalan").value.trim();
+        var badge = document.getElementById("address-badge");
+
+        if (badge) {
+          if (nama && telp && jalan) {
+            badge.innerText = "Lengkap";
+            badge.className = "badge-premium-status badge-premium-active";
+          } else {
+            badge.innerText = "Belum Lengkap";
+            badge.className = "badge-premium-status badge-premium-empty";
+          }
+        }
+      }
+
+      function kembaliKeKeranjang() {
+        if (
+          window.parent &&
+          window.parent.document.getElementById("app-frame")
+        ) {
+          window.parent.document.getElementById("app-frame").src =
+            "pages/cart.html";
+        } else {
+          window.location.href = "cart.html";
+        }
+      }
+
+      function validasiDanLanjut() {
+        var nama = document.getElementById("input-nama").value.trim();
+        var telp = document.getElementById("input-telepon").value.trim();
+        var jalan = document.getElementById("input-jalan").value.trim();
+
+        if (!nama || !telp || !jalan) {
+          alert(
+            "Silakan lengkapi nama, nomor telepon, dan alamat pengiriman Anda!",
+          );
+          return;
+        }
+
+        var payload = JSON.parse(localStorage.getItem("pending_checkout"));
+        payload.alamat = { nama: nama, telepon: telp, jalan: jalan };
+        localStorage.setItem("pending_checkout", JSON.stringify(payload));
+
+        window.location.href = "payment.html";
+      }
+    </script>
+  </body>
+</html>

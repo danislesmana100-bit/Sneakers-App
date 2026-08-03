@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/auth.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      .premium-user-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+        border-radius: 20px;
+        padding: 24px;
+        color: #ffffff;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .premium-user-card::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        bottom: -30px;
+        width: 140px;
+        height: 140px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 50%;
+      }
+      .user-welcome {
+        font-size: 11px;
+        color: #888;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+      .user-display-name {
+        font-size: 22px;
+        font-weight: 800;
+        margin-top: 6px;
+        letter-spacing: -0.5px;
+      }
+      .user-display-email {
+        font-size: 13px;
+        color: #b8b8b8;
+        margin-top: 2px;
+        font-weight: 400;
+      }
+
+      .premium-menu-list {
+        background: #ffffff;
+        border: 1px solid #f2f2f4;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+        margin-bottom: 24px;
+      }
+      .premium-menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        border-bottom: 1px solid #f8f8fa;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .premium-menu-item:last-child {
+        border-bottom: none;
+      }
+      .premium-menu-item:active {
+        background: #fafafa;
+      }
+      .menu-item-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+      .menu-item-arrow {
+        color: #bfbfbf;
+        font-weight: bold;
+        font-size: 15px;
+      }
+
+      /* Settings Bottom Sheet Modal Overlay */
+      .settings-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        display: none;
+        align-items: flex-end;
+      }
+      .settings-sheet {
+        width: 100%;
+        background: #ffffff;
+        border-radius: 24px 24px 0 0;
+        padding: 24px;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
+        max-height: 85vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+        animation: slideUp 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .sheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .sheet-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #1a1a1a;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .btn-close-sheet {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #8c8c8c;
+        line-height: 1;
+      }
+
+      .premium-field-input,
+      .premium-field-textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid #f0f0f2;
+        border-radius: 14px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        color: #1a1a1a;
+        box-sizing: border-box;
+        background: #fafafa;
+        margin-bottom: 12px;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .premium-field-input:focus,
+      .premium-field-textarea:focus {
+        border-color: #1a1a1a;
+        background: #ffffff;
+      }
+
+      .btn-premium-black {
+        width: 100%;
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        padding: 16px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .btn-premium-black:active {
+        background: #333333;
+      }
+      .btn-premium-outline {
+        width: 100%;
+        background: transparent;
+        color: #ff3838;
+        border: 1.5px solid #fff1f0;
+        padding: 14px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        text-align: center;
+        box-sizing: border-box;
+        transition: background 0.2s;
+      }
+      .btn-premium-outline:active {
+        background: #fff1f0;
+      }
+
+      /* Style Tombol Batal Modal Logout Custom */
+      .logout-cancel-btn {
+        width: 100%;
+        background: #f4f4f6;
+        color: #1a1a1a;
+        border: none;
+        padding: 15px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.2s;
+      }
+      .logout-cancel-btn:active {
+        background: #e5e5e8;
+      }
+
+      /* Style Toast Custom */
+      #toast-profile {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a1a;
+        color: #fff;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 10000;
+        transition: transform 0.3s ease;
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+      #toast-profile.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="page-body">
+    <div class="page-container" style="padding: 20px">
+      <h2
+        class="page-header-title"
+        style="
+          font-size: 24px;
+          font-weight: 800;
+          margin-bottom: 20px;
+          color: #1a1a1a;
+        "
+      >
+        Profil
+      </h2>
+
+      <div id="box-belum-login" style="display: block">
+        <div
+          style="
+            background: #ffffff;
+            padding: 28px 20px;
+            border-radius: 18px;
+            border: 1px solid #f2f2f4;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+          "
+        >
+          <h3
+            style="
+              margin-top: 0;
+              font-size: 18px;
+              font-weight: 800;
+              color: #1a1a1a;
+            "
+          >
+            Pengguna Premium
+          </h3>
+          <p
+            style="
+              color: #666;
+              font-size: 13px;
+              margin-bottom: 20px;
+              line-height: 1.5;
+            "
+          >
+            Silakan masuk untuk menikmati fitur penuh dan kemudahan
+            bertransaksi.
+          </p>
+          <button
+            class="btn-premium-black"
+            onclick="window.parent.bukaHalamanLogin()"
+          >
+            Masuk / Daftar
+          </button>
+        </div>
+      </div>
+
+      <div id="box-sudah-login" style="display: none">
+        <div class="premium-user-card">
+          <div class="user-welcome">Selamat Datang,</div>
+          <div class="user-display-name" id="user-display-name">Memuat...</div>
+          <div class="user-display-email" id="user-display-email">&nbsp;</div>
+        </div>
+
+        <div class="premium-menu-list">
+          <div
+            class="premium-menu-item"
+            id="menu-admin-panel"
+            style="display: none; background: #f4f4f6; border-left: 4px solid #1a1a1a;"
+            onclick="if(window.parent && typeof window.parent.bukaHalamanAdmin === 'function'){ window.parent.bukaHalamanAdmin(); } else if(window.parent){ window.parent.document.getElementById('app-frame').src = 'pages/admin.html'; }"
+          >
+            <div class="menu-item-left" style="color: #1a1a1a;">⚡ &nbsp;Panel Admin <span style="background: #1a1a1a; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-left: 4px;">ADMIN</span></div>
+            <div class="menu-item-arrow" style="color: #1a1a1a;">›</div>
+          </div>
+          <div
+            class="premium-menu-item"
+            onclick="
+              window.parent.switchPage(
+                'orders',
+                window.parent.document.querySelectorAll('.nav-item')[2],
+              )
+            "
+          >
+            <div class="menu-item-left">📦 &nbsp;Riwayat Pesanan</div>
+            <div class="menu-item-arrow">›</div>
+          </div>
+          <div class="premium-menu-item" onclick="bukaSheetPengaturan()">
+            <div class="menu-item-left">⚙️ &nbsp;Pengaturan Akun & Alamat</div>
+            <div class="menu-item-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- PERBAIKAN: Panggil Modal Bottom Sheet Custom alih-alih confirm browser -->
+        <button
+          class="btn-premium-outline"
+          onclick="bukaModalKonfirmasiLogout()"
+        >
+          Keluar Akun
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Pengaturan Profil -->
+    <div
+      class="settings-overlay"
+      id="settings-modal"
+      onclick="tutupSheetPengaturan(event)"
+    >
+      <div class="settings-sheet" onclick="event.stopPropagation()">
+        <div class="sheet-header">
+          <span class="sheet-title">⚙️ Atur Informasi Pengiriman</span>
+          <button class="btn-close-sheet" onclick="tutupSheetPengaturan(null)">
+            &times;
+          </button>
+        </div>
+
+        <input
+          type="text"
+          id="set-nama"
+          class="premium-field-input"
+          placeholder="Nama Lengkap Penerima"
+        />
+        <input
+          type="text"
+          id="set-telepon"
+          class="premium-field-input"
+          placeholder="Nomor Telepon Aktif"
+        />
+        <textarea
+          id="set-jalan"
+          class="premium-field-textarea"
+          rows="3"
+          placeholder="Alamat Lengkap Pengiriman (Nama Jalan, RT/RW, Blok, No. Rumah)"
+        ></textarea>
+
+        <button
+          class="btn-premium-black"
+          style="margin-top: 8px"
+          onclick="simpanPengaturanProfil()"
+        >
+          Simpan Perubahan
+        </button>
+      </div>
+    </div>
+
+    <!-- ELEMEN BARU: Modal Custom Bottom Sheet Konfirmasi Logout -->
+    <div
+      class="settings-overlay"
+      id="logout-modal"
+      onclick="tutupModalLogout(event)"
+    >
+      <div class="settings-sheet" onclick="event.stopPropagation()">
+        <div class="sheet-header" style="margin-bottom: 12px">
+          <span class="sheet-title" style="color: #ff3838">🚪 Keluar Akun</span>
+          <button class="btn-close-sheet" onclick="tutupModalLogout(null)">
+            &times;
+          </button>
+        </div>
+
+        <p style="font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.5;">
+          Apakah Anda yakin ingin keluar dari akun ini?.
+        </p>
+
+        <button
+          class="btn-premium-black"
+          style="background: #ff3838"
+          onclick="eksekusiLogoutPasti()"
+        >
+          Ya, Keluar Sekarang
+        </button>
+        <button class="logout-cancel-btn" onclick="tutupModalLogout(null)">
+          Batal
+        </button>
+      </div>
+    </div>
+
+    <div id="toast-profile"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="../js/app-core.js"></script>
+    <script>
+      window.SneakersApp.initFirebase(window);
+
+      // KONTROLER MODAL LOGOUT CUSTOM
+      function bukaModalKonfirmasiLogout() {
+        var modal = document.getElementById("logout-modal");
+        if (modal) modal.style.display = "flex";
+      }
+
+      function tutupModalLogout(e) {
+        if (!e || e.target.id === "logout-modal") {
+          var modal = document.getElementById("logout-modal");
+          if (modal) modal.style.display = "none";
+        }
+      }
+
+      function eksekusiLogoutPasti() {
+        tutupModalLogout(null);
+        if (window.parent && typeof window.parent.aksiLogoutGlobal === "function") {
+          window.parent.aksiLogoutGlobal();
+        }
+      }
+    </script>
+    <script src="../js/profile-page.js"></script>
+  </body>
+</html>

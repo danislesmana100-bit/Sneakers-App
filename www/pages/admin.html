@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Admin - Sneakers Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      body {
+        background-color: #f7f7f9;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #1a1a1a;
+      }
+      .admin-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px 16px 60px 16px;
+        box-sizing: border-box;
+      }
+
+      /* Admin Header */
+      .admin-top-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 16px 20px;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      }
+      .admin-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn-back-home {
+        background: rgba(255,255,255,0.15);
+        border: none;
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-weight: 700;
+        transition: background 0.2s;
+      }
+      .btn-back-home:hover {
+        background: rgba(255,255,255,0.25);
+      }
+      .admin-header-title {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .admin-header-subtitle {
+        font-size: 11px;
+        color: #aaa;
+      }
+      .admin-badge {
+        background: #333;
+        color: #00e676;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        border: 1px solid rgba(0,230,118,0.3);
+      }
+
+      /* Quick Stats */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      @media (min-width: 600px) {
+        .stats-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .stat-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      }
+      .stat-label {
+        font-size: 11px;
+        color: #8c8c8c;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .stat-value {
+        font-size: 20px;
+        font-weight: 800;
+        margin-top: 4px;
+        color: #1a1a1a;
+      }
+
+      /* Navigation Tabs */
+      .admin-tabs {
+        display: flex;
+        background: #e8e8ed;
+        padding: 4px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        gap: 4px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+      }
+      .tab-btn.active {
+        background: #ffffff;
+        color: #1a1a1a;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+
+      /* Section Cards */
+      .admin-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        margin-bottom: 24px;
+      }
+      .admin-card-title {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Form Styles */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      @media (min-width: 600px) {
+        .form-grid-2 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .admin-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .admin-form-group label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #444;
+      }
+      .admin-input, .admin-textarea, .admin-select {
+        padding: 12px 14px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 13px;
+        background: #fafafa;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .admin-input:focus, .admin-textarea:focus, .admin-select:focus {
+        border-color: #1a1a1a;
+        background: #ffffff;
+      }
+      .btn-admin-submit {
+        background: #1a1a1a;
+        color: #ffffff;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        transition: background 0.2s;
+      }
+      .btn-admin-submit:active {
+        background: #333;
+      }
+
+      /* Product List Table / Grid in Admin */
+      .admin-product-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px;
+        border: 1px solid #f0f0f0;
+        border-radius: 14px;
+        margin-bottom: 10px;
+        background: #ffffff;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .admin-product-thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: #f4f4f6;
+        flex-shrink: 0;
+      }
+      .admin-product-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .admin-product-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a1a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .admin-product-meta {
+        font-size: 12px;
+        color: #777;
+        margin-top: 2px;
+      }
+      .admin-product-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .btn-action-edit {
+        background: #f4f4f6;
+        color: #1a1a1a;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .btn-action-delete {
+        background: #fff1f0;
+        color: #ff3838;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      /* Admin Orders List */
+      .admin-order-card {
+        border: 1px solid #eaeaea;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
+        background: #ffffff;
+      }
+      .admin-order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #f4f4f6;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+      }
+      .admin-order-id {
+        font-size: 13px;
+        font-weight: 800;
+        color: #1a1a1a;
+      }
+      .admin-order-date {
+        font-size: 11px;
+        color: #888;
+      }
+      .admin-order-user {
+        font-size: 12px;
+        color: #555;
+        background: #fafafa;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+      .admin-order-status-select {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+      }
+
+      /* Modal Styling */
+      .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+      }
+      .modal-content {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 24px;
+        width: 100%;
+        max-width: 550px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      /* Toast Notifications */
+      #toast-admin {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 11000;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      #toast-admin.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Admin Top Header -->
+      <div class="admin-top-header">
+        <div class="admin-header-left">
+          <button class="btn-back-home" onclick="kembaliKeToko()" title="Kembali ke Etalase">
+            &#x276E;
+          </button>
+          <div>
+            <div class="admin-header-title">Panel Dashboard Admin</div>
+            <div class="admin-header-subtitle">Manajemen Produk & Pesanan Toko</div>
+          </div>
+        </div>
+        <div class="admin-badge">ONLINE ADMIN</div>
+      </div>
+
+      <!-- Ringkasan Statistik Quick Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Produk</div>
+          <div class="stat-value" id="stat-total-produk">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Pesanan</div>
+          <div class="stat-value" id="stat-total-pesanan">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Omset</div>
+          <div class="stat-value" id="stat-total-omset" style="font-size: 15px;">Rp 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Stok Menipis</div>
+          <div class="stat-value" id="stat-stok-menipis" style="color: #ff3838;">0</div>
+        </div>
+      </div>
+
+      <!-- Tab Navigasi Admin -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" id="tab-produk-btn" onclick="pindahTabAdmin('produk')">
+          👟 Kelola Produk
+        </button>
+        <button class="tab-btn" id="tab-pesanan-btn" onclick="pindahTabAdmin('pesanan')">
+          📦 Kelola Pesanan
+        </button>
+      </div>
+
+      <!-- TAB 1: KELOLA PRODUK -->
+      <div id="tab-admin-produk">
+        <!-- Form Tambah Produk Baru -->
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <span>➕ Tambah Sneakers Baru</span>
+          </div>
+
+          <form id="form-tambah-produk" onsubmit="simpanProdukBaru(event)">
+            <div class="form-grid form-grid-2">
+              <div class="admin-form-group">
+                <label>Nama Sneakers *</label>
+                <input type="text" id="add-name" class="admin-input" placeholder="Contoh: Air Jordan 1 Retro High" required />
+              </div>
+              <div class="admin-form-group">
+                <label>Brand / Merek *</label>
+                <select id="add-brand" class="admin-select" required>
+                  <option value="Nike">Nike</option>
+                  <option value="Adidas">Adidas</option>
+                  <option value="Jordan">Jordan</option>
+                  <option value="Puma">Puma</option>
+                  <option value="New Balance">New Balance</option>
+                  <option value="Vans">Vans</option>
+                  <option value="Converse">Converse</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid form-grid-2" style="margin-top: 12px;">
+              <div class="admin-form-group">
+                <label>Harga (IDR) *</label>
+                <input type="number" id="add-price" class="admin-input" placeholder="Contoh: 1850000" min="0" required />
+              </div>
+              <div class="admin-form-group">
+                <label>Stok (Pcs) *</label>
+                <input type="number" id="add-stock" class="admin-input" placeholder="Contoh: 10" min="0" required />
+              </div>
+            </div>
+
+            <div class="admin-form-group" style="margin-top: 12px;">
+              <label>URL Gambar (Direct Link) *</label>
+              <input type="url" id="add-image" class="admin-input" placeholder="https://images.unsplash.com/photo-..." required />
+            </div>
+
+            <div class="form-grid form-grid-2" style="margin-top: 12px;">
+              <div class="admin-form-group">
+                <label>Ukuran Tersedia (Pisahkan Koma)</label>
+                <input type="text" id="add-sizes" class="admin-input" placeholder="Contoh: 39, 40, 41, 42, 43" value="39, 40, 41, 42, 43" />
+              </div>
+              <div class="admin-form-group">
+                <label>Kategori</label>
+                <select id="add-category" class="admin-select">
+                  <option value="Unisex">Unisex</option>
+                  <option value="Men">Men</option>
+                  <option value="Women">Women</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-form-group" style="margin-top: 12px;">
+              <label>Deskripsi Produk</label>
+              <textarea id="add-description" class="admin-textarea" rows="3" placeholder="Tuliskan keunggulan dan detail bahan sneakers..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-admin-submit">Simpan Produk Ke Etalase</button>
+          </form>
+        </div>
+
+        <!-- Daftar Produk di Etalase -->
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <span>📋 Etalase Produk Aktif</span>
+            <input type="text" id="search-admin-product" placeholder="Cari nama/brand..." oninput="filterProdukAdmin(this.value)" style="padding: 6px 12px; font-size: 12px; border-radius: 8px; border: 1px solid #ccc; outline: none;" />
+          </div>
+
+          <div id="admin-product-list-container">
+            <div style="text-align: center; color: #888; padding: 20px 0;">Memuat daftar produk...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: KELOLA PESANAN -->
+      <div id="tab-admin-pesanan" style="display: none;">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <span>📦 Pesanan Masuk Pembeli</span>
+            <select id="filter-order-status" onchange="filterPesananAdmin(this.value)" style="padding: 6px 12px; font-size: 12px; border-radius: 8px; border: 1px solid #ccc;">
+              <option value="all">Semua Status</option>
+              <option value="pending">Menunggu Konfirmasi</option>
+              <option value="processing">Diproses</option>
+              <option value="shipped">Dikirim</option>
+              <option value="completed">Selesai</option>
+            </select>
+          </div>
+
+          <div id="admin-orders-list-container">
+            <div style="text-align: center; color: #888; padding: 20px 0;">Memuat daftar pesanan...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit Produk -->
+    <div class="modal-overlay" id="modal-edit-product">
+      <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 800;">✏️ Edit Detail Produk</h3>
+          <button onclick="tutupModalEdit()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #888;">&times;</button>
+        </div>
+
+        <form id="form-edit-produk" onsubmit="updateProdukAdmin(event)">
+          <input type="hidden" id="edit-id" />
+          <div class="admin-form-group">
+            <label>Nama Sneakers</label>
+            <input type="text" id="edit-name" class="admin-input" required />
+          </div>
+          <div class="form-grid form-grid-2" style="margin-top: 10px;">
+            <div class="admin-form-group">
+              <label>Brand</label>
+              <select id="edit-brand" class="admin-select" required>
+                <option value="Nike">Nike</option>
+                <option value="Adidas">Adidas</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Puma">Puma</option>
+                <option value="New Balance">New Balance</option>
+                <option value="Vans">Vans</option>
+                <option value="Converse">Converse</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label>Harga (IDR)</label>
+              <input type="number" id="edit-price" class="admin-input" required min="0" />
+            </div>
+          </div>
+          <div class="form-grid form-grid-2" style="margin-top: 10px;">
+            <div class="admin-form-group">
+              <label>Stok (Pcs)</label>
+              <input type="number" id="edit-stock" class="admin-input" required min="0" />
+            </div>
+            <div class="admin-form-group">
+              <label>Ukuran Tersedia</label>
+              <input type="text" id="edit-sizes" class="admin-input" />
+            </div>
+          </div>
+          <div class="admin-form-group" style="margin-top: 10px;">
+            <label>URL Gambar</label>
+            <input type="url" id="edit-image" class="admin-input" required />
+          </div>
+          <div class="admin-form-group" style="margin-top: 10px;">
+            <label>Deskripsi</label>
+            <textarea id="edit-description" class="admin-textarea" rows="3"></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button type="button" onclick="tutupModalEdit()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #ccc; background: #fff; font-weight: 700; cursor: pointer;">Batal</button>
+            <button type="submit" class="btn-admin-submit" style="flex: 1; margin: 0;">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-admin"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="../js/app-core.js"></script>
+    <script>
+      window.SneakersApp.initFirebase(window);
+    </script>
+    <script src="../js/admin-page.js"></script>
+  </body>
+</html>

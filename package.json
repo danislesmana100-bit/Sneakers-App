@@ -1,0 +1,25 @@
+{
+  "name": "com.tokosneakers.app",
+  "displayName": "Sneakers Shop",
+  "version": "1.0.0",
+  "description": "Aplikasi E-Commerce sneakers premium berbasis Cordova dan Firebase.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "ecommerce",
+    "sneakers"
+  ],
+  "author": "Sneakers Shop Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-browser": "^7.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "browser"
+    ]
+  }
+}
